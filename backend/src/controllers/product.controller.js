@@ -4,6 +4,8 @@ import Category from '../models/Category.js';
 import AppError from '../utils/AppError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { delByPrefix } from '../services/cache.js';
+import { deleteImages } from '../services/cloudinary.js';
+import { deleteImages } from '../services/cloudinary.js';
 
 const SORTS = {
   newest: { createdAt: -1 },
@@ -88,6 +90,8 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
 export const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findByIdAndDelete(req.params.id);
+  if (product) await deleteImages(product.images);
+  if (product) await deleteImages(product.images);
   if (!product) throw new AppError('Product not found', 404);
   await delByPrefix('products:');
   res.json({ success: true, message: 'Product deleted' });

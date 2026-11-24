@@ -21,6 +21,12 @@ export const errorHandler = (err, req, res, next) => {
   } else if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
     status = 401;
     message = 'Invalid or expired token';
+  } else if (err.name === 'MulterError') {
+    status = 400;
+    message = err.code === 'LIMIT_FILE_SIZE' ? 'Image too large (max 5 MB)' : err.message;
+  } else if (err.name === 'MulterError') {
+    status = 400;
+    message = err.code === 'LIMIT_FILE_SIZE' ? 'Image too large (max 5 MB)' : err.message;
   } else if (err.type === 'entity.parse.failed') {
     status = 400;
     message = 'Malformed JSON';

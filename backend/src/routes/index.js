@@ -9,6 +9,7 @@ import likeRoutes from './like.routes.js';
 import reviewRoutes from './review.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import paymentRoutes from './payment.routes.js';
+import uploadRoutes from './upload.routes.js';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.use('/cart', cartRoutes);
 router.use('/orders', orderRoutes);
 router.use('/users', userRoutes);
 router.use('/payments', paymentRoutes);
+router.use('/uploads', uploadRoutes);
 router.use('/admin/dashboard', dashboardRoutes);
 router.use('/', likeRoutes);
 router.use('/', reviewRoutes);
