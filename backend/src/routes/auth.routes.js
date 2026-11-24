@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import rateLimit from 'express-rate-limit';
+import { createLimiter } from '../middleware/rateLimit.js';
 import { validate } from '../middleware/validate.js';
 import { protect } from '../middleware/auth.js';
 import { register, login, refresh, logout, me } from '../controllers/auth.controller.js';
 
 const router = Router();
 
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false });
+const authLimiter = createLimiter({ windowMs: 15 * 60 * 1000, limit: 20, prefix: 'auth' });
 
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(80),

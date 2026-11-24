@@ -5,7 +5,7 @@ import AppError from '../utils/AppError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { delByPrefix } from '../services/cache.js';
 import { deleteImages } from '../services/cloudinary.js';
-import { deleteImages } from '../services/cloudinary.js';
+
 
 const SORTS = {
   newest: { createdAt: -1 },
