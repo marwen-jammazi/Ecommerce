@@ -7,6 +7,8 @@ import orderRoutes from './order.routes.js';
 import userRoutes from './user.routes.js';
 import likeRoutes from './like.routes.js';
 import reviewRoutes from './review.routes.js';
+import dashboardRoutes from './dashboard.routes.js';
+import paymentRoutes from './payment.routes.js';
 
 const router = Router();
 
@@ -16,6 +18,8 @@ router.use('/categories', categoryRoutes);
 router.use('/cart', cartRoutes);
 router.use('/orders', orderRoutes);
 router.use('/users', userRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/admin/dashboard', dashboardRoutes);
 router.use('/', likeRoutes);
 router.use('/', reviewRoutes);
 

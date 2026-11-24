@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import routes from './routes/index.js';
 import sanitize from './middleware/sanitize.js';
+import { stripeWebhook } from './controllers/payment.controller.js';
 import { notFound, errorHandler } from './middleware/error.js';
 
 const app = express();
@@ -21,6 +22,10 @@ app.use(
   })
 );
 app.use(compression());
+
+// Stripe webhook needs the RAW body, so it must come before express.json()
+app.post('/api/v1/payments/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 app.use(sanitize);

@@ -27,6 +27,7 @@
     "mongoose": "^9.13.0",
     "morgan": "^1.12.1",
     "slugify": "^1.6.9",
+    "stripe": "^23.2.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

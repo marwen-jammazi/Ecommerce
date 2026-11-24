@@ -33,7 +33,9 @@ const orderSchema = new mongoose.Schema(
     itemsPrice: { type: Number, required: true },
     shippingPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
-    paymentId: String, // filled by the payment gateway later
+    paymentProvider: { type: String, enum: ['stripe', 'flouci'] },
+    paymentId: String,
+    paymentExpiresAt: Date,
     paidAt: Date,
     deliveredAt: Date,
   },
@@ -43,6 +45,7 @@ const orderSchema = new mongoose.Schema(
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ orderStatus: 1, createdAt: -1 });
 orderSchema.index({ createdAt: -1 });
+orderSchema.index({ paymentStatus: 1, paidAt: -1 });
 orderSchema.index({ 'items.product': 1, user: 1 });
 
 export default mongoose.model('Order', orderSchema);

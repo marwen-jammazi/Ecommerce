@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import app from './app.js';
 import redis from './config/redis.js';
 import { connectDB } from './config/db.js';
+import { startReleaseJob } from './jobs/releaseUnpaid.js';
 
 for (const key of ['MONGO_URI', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET']) {
   if (!process.env[key]) {
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 5000;
 
 await connectDB();
 const server = app.listen(PORT, () => console.log(`[api] listening on http://localhost:${PORT}`));
+startReleaseJob();
 
 async function shutdown(signal) {
   console.log(`\n${signal} received, shutting down`);
