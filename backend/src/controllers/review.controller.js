@@ -76,3 +76,27 @@ export const deleteReview = asyncHandler(async (req, res) => {
   await delByPrefix('products:');
   res.json({ success: true, message: 'Review deleted' });
 });
+
+// admin: every review in the store, newest first. Optional ?rating=1..5 and ?search=text
+export const listAllReviews = asyncHandler(async (req, res) => {
+  const page = Math.max(parseInt(req.query.page) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 12, 1), 50);
+
+  const filter = {};
+  const rating = parseInt(req.query.rating);
+  if (rating >= 1 && rating <= 5) filter.rating = rating;
+  const search = typeof req.query.search === 'string' ? req.query.search.trim().slice(0, 80) : '';
+  if (search) filter.comment = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
+
+  const [data, total] = await Promise.all([
+    Review.find(filter)
+      .populate('user', 'name email')
+      .populate('product', 'name slug images')
+      .sort('-createdAt')
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean(),
+    Review.countDocuments(filter),
+  ]);
+  res.json({ success: true, data, pagination: { page, limit, total, pages: Math.ceil(total / limit) } });
+});

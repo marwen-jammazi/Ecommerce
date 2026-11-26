@@ -64,3 +64,24 @@ export async function api(path, opts = {}) {
   }
   return data;
 }
+
+// downloads a file (CSV report); returns { blob, filename }
+export async function apiBlob(path) {
+  let res = await send(path);
+  if (res.status === 401) {
+    try {
+      await refreshSession();
+      res = await send(path);
+    } catch {
+      accessToken = null;
+      window.dispatchEvent(new Event('auth:expired'));
+    }
+  }
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(data.message || 'Download failed', res.status);
+  }
+  const cd = res.headers.get('content-disposition') || '';
+  const m = /filename="?([^";]+)"?/i.exec(cd);
+  return { blob: await res.blob(), filename: m ? m[1] : null };
+}

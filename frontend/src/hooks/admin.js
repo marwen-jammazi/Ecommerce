@@ -59,3 +59,70 @@ export async function uploadImage(file) {
   if (!url) throw new ApiError('Upload worked but no image address came back', 500);
   return { url, publicId: d.publicId || d.public_id };
 }
+
+// ---------- dashboard ----------
+export const useDash = (name, params = {}) =>
+  useQuery({
+    queryKey: ['dash', name, params],
+    queryFn: () => api(`/admin/dashboard/${name}?${qs(params)}`),
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+
+// ---------- orders ----------
+export const useAdminOrders = (params) =>
+  useQuery({
+    queryKey: ['orders', 'admin', params],
+    queryFn: () => api(`/orders?${qs(params)}`),
+    placeholderData: keepPreviousData,
+  });
+
+export function useUpdateOrderStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    // both names are sent so it works with either spelling on the server
+    mutationFn: ({ id, status }) => api(`/orders/${id}/status`, { method: 'PUT', body: { status, orderStatus: status } }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['orders'] });
+      qc.invalidateQueries({ queryKey: ['dash'] });
+      qc.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+}
+
+// ---------- users ----------
+export const useAdminUsers = (params) =>
+  useQuery({
+    queryKey: ['users', params],
+    queryFn: () => api(`/users?${qs(params)}`),
+    placeholderData: keepPreviousData,
+  });
+
+export function useUpdateUser() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, body }) => api(`/users/${id}`, { method: 'PUT', body }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['users'] }),
+  });
+}
+
+// ---------- reviews ----------
+export const useAdminReviews = (params) =>
+  useQuery({
+    queryKey: ['reviews', 'admin', params],
+    queryFn: () => api(`/reviews?${qs(params)}`),
+    placeholderData: keepPreviousData,
+  });
+
+export function useDeleteReview() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => api(`/reviews/${id}`, { method: 'DELETE' }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['reviews'] });
+      qc.invalidateQueries({ queryKey: ['products'] }); // rating averages changed
+      qc.invalidateQueries({ queryKey: ['product'] });
+    },
+  });
+}
