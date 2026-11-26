@@ -10,7 +10,7 @@ export async function markPaid(orderId, provider, paymentId) {
   const paid = await Order.findOneAndUpdate(
     { _id: orderId, paymentMethod: 'ONLINE', paymentStatus: { $in: ['Pending', 'Failed'] }, orderStatus: { $ne: 'Cancelled' } },
     { $set: { paymentStatus: 'Paid', paidAt: new Date(), paymentProvider: provider, paymentId } },
-    { new: true }
+    { returnDocument: 'after' }
   );
   if (paid) {
     await Order.updateOne({ _id: orderId, orderStatus: 'Pending' }, { $set: { orderStatus: 'Confirmed' } });
@@ -36,7 +36,7 @@ export async function releaseUnpaid(orderId) {
   const order = await Order.findOneAndUpdate(
     { _id: orderId, paymentMethod: 'ONLINE', paymentStatus: 'Pending', orderStatus: 'Pending' },
     { $set: { paymentStatus: 'Failed', orderStatus: 'Cancelled' } },
-    { new: true }
+    { returnDocument: 'after' }
   );
   if (!order) return false;
   await restoreStock(order.items);

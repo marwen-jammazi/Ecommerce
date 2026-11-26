@@ -10,8 +10,7 @@ import sanitize from './middleware/sanitize.js';
 import { createLimiter } from './middleware/rateLimit.js';
 import { stripeWebhook } from './controllers/payment.controller.js';
 import { notFound, errorHandler } from './middleware/error.js';
-import dns from 'node:dns';
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+
 const app = express();
 
 app.set('trust proxy', 1); // we run behind Nginx / a load balancer

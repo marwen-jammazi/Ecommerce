@@ -1,0 +1,267 @@
+/* ---------- admin area (same glass + neumorphic language) ---------- */
+.admin {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.admin-side {
+  position: sticky;
+  top: 96px;
+  padding: 22px 18px;
+  display: grid;
+  gap: 14px;
+}
+.admin-side nav {
+  display: grid;
+  gap: 6px;
+}
+.admin-side nav a {
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.admin-side nav a:hover {
+  color: var(--ink);
+}
+.admin-side nav a.active {
+  color: var(--ink);
+  font-weight: 400;
+  background: rgba(214, 219, 231, 0.6);
+  box-shadow: inset 4px 4px 9px var(--sh-dark), inset -4px -4px 9px var(--sh-light);
+}
+.admin-main {
+  min-width: 0;
+}
+.admin-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.admin-head h1 {
+  font-size: clamp(34px, 5vw, 52px);
+}
+.admin-head .btn svg {
+  margin-right: 6px;
+}
+.admin-filters {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+/* list rows */
+.admin-list {
+  list-style: none;
+  padding: 8px 22px;
+}
+.admin-list li {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 130px auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.admin-list li:last-child {
+  border-bottom: 0;
+}
+.admin-list li.is-hidden .thumb,
+.admin-list li.is-hidden .info {
+  opacity: 0.5;
+}
+.admin-list .thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: rgba(214, 219, 231, 0.6);
+  box-shadow: inset 3px 3px 7px var(--sh-dark), inset -3px -3px 7px var(--sh-light);
+  font-size: 10px;
+  color: var(--ink-3);
+  text-align: center;
+}
+.admin-list .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-list .info,
+.admin-list .num {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.admin-list .name {
+  font-size: 17px;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-list .meta {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.admin-list .meta.low {
+  color: var(--danger);
+}
+.admin-list .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.admin-list .actions .chip {
+  height: 34px;
+  padding: 0 14px;
+}
+.chip.danger {
+  color: var(--danger);
+}
+.admin-list.cats li {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+/* forms */
+.admin-form textarea.input {
+  height: auto;
+  min-height: 130px;
+  padding: 14px 20px;
+  border-radius: 24px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ink);
+}
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.imgs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+}
+.imgs figure,
+.imgs .uploading,
+.imgs .drop {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 22px;
+  overflow: hidden;
+}
+.imgs figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.imgs figure.cover {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.imgs .x {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.85);
+}
+.imgs .mk {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  height: 28px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.85);
+}
+.imgs .uploading,
+.imgs .drop {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  text-align: center;
+  background: rgba(214, 219, 231, 0.6);
+  box-shadow: inset 5px 5px 11px var(--sh-dark), inset -5px -5px 11px var(--sh-light);
+  cursor: pointer;
+  padding: 8px;
+}
+.imgs .drop small {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.cat-add {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+@media (max-width: 900px) {
+  .admin {
+    grid-template-columns: 1fr;
+  }
+  .admin-side {
+    position: static;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding: 14px 18px;
+  }
+  .admin-side nav {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 640px) {
+  .admin-filters {
+    grid-template-columns: 1fr;
+  }
+  .admin-list {
+    padding: 4px 16px;
+  }
+  .admin-list li {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 10px 14px;
+  }
+  .admin-list .thumb {
+    width: 56px;
+    height: 56px;
+  }
+  .admin-list .num,
+  .admin-list .actions {
+    grid-column: 1 / -1;
+  }
+  .admin-list .num {
+    grid-auto-flow: column;
+    justify-content: space-between;
+  }
+  .admin-list .actions {
+    justify-content: flex-start;
+  }
+  .admin-list.cats li {
+    grid-template-columns: 1fr;
+  }
+}

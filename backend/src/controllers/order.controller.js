@@ -101,7 +101,7 @@ export const cancelMyOrder = asyncHandler(async (req, res) => {
   const order = await Order.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id, orderStatus: 'Pending', paymentStatus: { $ne: 'Paid' } },
     { $set: { orderStatus: 'Cancelled' } },
-    { new: true }
+    { returnDocument: 'after' }
   );
   if (!order) throw new AppError('Order cannot be cancelled (already processed or paid)', 409);
 
@@ -166,7 +166,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   const updated = await Order.findOneAndUpdate(
     { _id: order._id, orderStatus: order.orderStatus },
     { $set: set },
-    { new: true }
+    { returnDocument: 'after' }
   );
   if (!updated) throw new AppError('Order was modified by someone else, please retry', 409);
 

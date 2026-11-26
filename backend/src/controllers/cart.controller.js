@@ -12,7 +12,7 @@ const checkId = (id) => {
 };
 
 const getOrCreate = (userId) =>
-  Cart.findOneAndUpdate({ user: userId }, { $setOnInsert: { items: [] } }, { upsert: true, new: true });
+  Cart.findOneAndUpdate({ user: userId }, { $setOnInsert: { items: [] } }, { upsert: true, returnDocument: 'after' });
 
 async function sendCart(res, userId, status = 200) {
   const cart = await Cart.findOne({ user: userId })

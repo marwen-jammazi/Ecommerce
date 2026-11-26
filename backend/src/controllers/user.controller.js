@@ -26,7 +26,7 @@ export const updateUser = asyncHandler(async (req, res) => {
   if (String(req.user._id) === req.params.id) {
     throw new AppError('You cannot change your own role or block yourself', 400);
   }
-  const user = await User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+  const user = await User.findByIdAndUpdate(req.params.id, { $set: req.body }, { returnDocument: 'after' })
     .select('name email role isBlocked')
     .lean();
   if (!user) throw new AppError('User not found', 404);

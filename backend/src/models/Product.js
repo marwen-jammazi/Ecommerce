@@ -25,11 +25,10 @@ productSchema.index({ category: 1, price: 1 });
 productSchema.index({ isActive: 1, createdAt: -1 });
 productSchema.index({ name: 'text', description: 'text' });
 
-productSchema.pre('validate', function (next) {
+productSchema.pre('validate', function () {
   if (this.isNew && !this.slug) {
     this.slug = `${slugify(this.name, { lower: true, strict: true })}-${crypto.randomBytes(3).toString('hex')}`;
   }
-  next();
 });
 
 export default mongoose.model('Product', productSchema);
