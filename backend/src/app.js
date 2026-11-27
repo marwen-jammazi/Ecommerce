@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(sanitize);
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-app.use('/api', createLimiter({ windowMs: 15 * 60 * 1000, limit: 300, prefix: 'api' }));
+app.use('/api', createLimiter({ windowMs: 15 * 60 * 1000, limit: Number(process.env.API_RATE_LIMIT) || 300, prefix: 'api' }));
 
 app.get('/health', (req, res) => {
   const body = { status: 'ok', uptime: process.uptime() };

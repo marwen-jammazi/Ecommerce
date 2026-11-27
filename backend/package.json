@@ -8,7 +8,9 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed:admin": "node src/seed/createAdmin.js",
-    "start:cluster": "node src/cluster.js"
+    "start:cluster": "node src/cluster.js",
+    "test:api": "node --env-file=.env --test tests/api.test.mjs",
+    "load": "node --env-file=.env tests/load.mjs"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +36,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "autocannon": "^9.0.0",
     "nodemon": "^3.1.14"
   }
 }
