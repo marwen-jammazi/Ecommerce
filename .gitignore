@@ -1,2 +1,7 @@
 node_modules
-.env
+.envdist
+*-files.txt
+probe.txt
+dist
+*-files.txt
+probe.txt

@@ -1,0 +1,72 @@
+# Render Blueprint for Atelier: API (Node) + Key Value (Redis cache) + static website.
+# MongoDB stays on Atlas. Secrets are asked for once, when you create the Blueprint.
+services:
+  # ---------- the API ----------
+  - type: web
+    name: atelier-api
+    runtime: node
+    region: frankfurt            # keep the API, Redis and Atlas in the same region
+    plan: free                   # free = 1 instance that sleeps after 15 min idle; use starter or higher for a real shop
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: node src/server.js   # on a paid plan with 2+ CPUs use: node src/cluster.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: atelier-cache
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: MONGO_URI            # Atlas string WITH a database name, e.g. .../ecommerce_prod?retryWrites=true&w=majority
+        sync: false
+      - key: CLIENT_URL           # the website address, e.g. https://atelier-site.onrender.com (no trailing slash)
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      # Stripe and Flouci keys: add them in the dashboard afterwards, names are in backend/.env.example
+
+  # ---------- the website ----------
+  - type: web
+    name: atelier-site
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+    routes:
+      # the website calls /api/v1/... on its own address; forward that to the API
+      - type: rewrite
+        source: /api/*
+        destination: https://atelier-api.onrender.com/api/*
+      # every other address is a page of the React app
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # ---------- cache + shared rate limits ----------
+  - type: keyvalue
+    name: atelier-cache
+    region: frankfurt
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []              # only your Render services can connect
